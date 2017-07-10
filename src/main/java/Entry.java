@@ -8,29 +8,32 @@ public class Entry {
   private String address;
   private String email;
   private int id;
+  private int contactId;
 
-  public Entry(String place, String phone, String address, String email) {
+  public Entry(String place, String phone, String address, String email, int contactId) {
     this.place = place;
     this.phone = phone;
     this.address = address;
     this.email = email;
+    this.contactId = contactId;
   }
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO entries(place, phone, address, email) VALUES (:place, :phone, :address, :email);";
+      String sql = "INSERT INTO entries(place, phone, address, email, contactId) VALUES (:place, :phone, :address, :email, :contactId);";
       this.id = (int) con.createQuery(sql, true)
         .addParameter("place", this.place)
         .addParameter("phone", this.phone)
         .addParameter("address", this.address)
         .addParameter("email", this.email)
+        .addParameter("contactId", this.contactId)
         .executeUpdate()
         .getKey();
     }
   }
 
   public static List<Entry> all() {
-    String sql = "SELECT id, place, phone, address, email FROM entries";
+    String sql = "SELECT id, place, phone, address, email, contactId FROM entries";
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql).executeAndFetch(Entry.class);
     }
@@ -46,7 +49,8 @@ public class Entry {
             this.getPhone().equals(newEntry.getPhone()) &&
             this.getAddress().equals(newEntry.getAddress()) &&
             this.getEmail().equals(newEntry.getEmail()) &&
-            this.getId() == (newEntry.getId());
+            this.getId() == (newEntry.getId()) &&
+            this.getContactId() == (newEntry.getContactId());
     }
   }
 
@@ -74,5 +78,8 @@ public class Entry {
   }
   public int getId() {
     return id;
+  }
+  public int getContactId() {
+    return contactId;
   }
 }
