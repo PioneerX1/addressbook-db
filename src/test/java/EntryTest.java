@@ -10,8 +10,10 @@ public class EntryTest {
   @After
   public void tearDown() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "DELETE FROM entries *;";
-      con.createQuery(sql).executeUpdate();
+      String deleteEntriesQuery = "DELETE FROM entries *;";
+      String deleteContactsQuery = "DELETE FROM contacts *;";
+      con.createQuery(deleteEntriesQuery).executeUpdate();
+      con.createQuery(deleteContactsQuery).executeUpdate();
     }
   }
 
